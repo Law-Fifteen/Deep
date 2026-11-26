@@ -662,7 +662,7 @@
   <div class="modalBack" id="modalBack" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
       <div class="modalHead">
-        <h3 id="modalTitle">Export Session (JSON)</h3>
+        <h3 id="modalTitle">Export Session (TXT)</h3>
         <div class="modalActions">
           <button class="btn small" id="copyExport" type="button">Copy</button>
           <button class="btn small" id="downloadExport" type="button">Download</button>
@@ -670,7 +670,7 @@
         </div>
       </div>
       <div class="tiny" style="color: var(--muted); line-height:1.45">
-        Includes: settings, shown-card log, and (Solo) answers keyed by stable id with timestamps.
+        Includes every card shown this session, numbered in order, with your answer (Solo mode).
       </div>
       <pre id="exportPre"></pre>
     </div>
@@ -1538,21 +1538,17 @@
     /***********************************************************************
      * EXPORT SESSION
      ***********************************************************************/
-    function buildExport(){
-      return {
-        sessionId: state.sessionId,
-        startedAt: state.sessionStartedAt,
-        exportedAt: nowIso(),
-        settings: state.settings,
-        history: state.history,
-        answers: state.answers,
-        log: state.log
-      };
+    function buildExportText(){
+      if(state.history.length === 0) return "No cards have been shown yet.";
+      return state.history.map((entry, i) => {
+        const ans = state.answers[entry.id];
+        const answer = ans && ans.text ? ans.text.trim() : "";
+        return `Question #${i + 1}: ${entry.card.text}\nAnswer: ${answer}`;
+      }).join("\n\n\n------\n\n");
     }
 
     el.exportBtn.addEventListener("click", () => {
-      const data = buildExport();
-      el.exportPre.textContent = JSON.stringify(data, null, 2);
+      el.exportPre.textContent = buildExportText();
       el.modalBack.classList.add("open");
     });
 
@@ -1570,10 +1566,10 @@
     });
 
     el.downloadExport.addEventListener("click", () => {
-      const blob = new Blob([el.exportPre.textContent], { type: "application/json" });
+      const blob = new Blob(["\ufeff" + el.exportPre.textContent], { type: "text/plain;charset=utf-8" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = `deep-session-${Date.now()}.json`;
+      a.download = `deep-session-${Date.now()}.txt`;
       a.click();
       URL.revokeObjectURL(a.href);
     });
