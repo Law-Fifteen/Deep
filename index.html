@@ -113,7 +113,7 @@
       overflow-y:auto;
       overscroll-behavior:contain;
       -webkit-overflow-scrolling:touch;
-      padding-bottom:72px; /* room above the floating Export button */
+      padding-bottom:24px;
       scrollbar-width:thin;
     }
     .grid{ display:grid; grid-template-columns: 1fr; gap:12px; }
@@ -382,28 +382,6 @@
     .tiny{ font-size:12px; color: var(--muted); font-weight:500; }
     .centerstatus{ display:flex; flex-direction:column; align-items:center; gap:2px; min-width: 160px; text-align:center; }
 
-    /* Export button */
-    .exportFab{
-      position: fixed; right: 16px;
-      bottom: calc(88px + env(safe-area-inset-bottom));
-      z-index: 30;
-    }
-    .fab{
-      border:1px solid var(--line-strong);
-      background: rgba(20,22,36,.78);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-radius: 999px;
-      padding: 12px 16px;
-      box-shadow: 0 1px 0 rgba(255,255,255,.1) inset, 0 18px 40px -8px rgba(0,0,0,.7);
-      cursor:pointer; user-select:none;
-      display:flex; align-items:center; gap:10px;
-      font-weight:700; font-size:13px;
-      transition: transform .15s var(--ease), border-color .2s ease;
-    }
-    .fab:hover{border-color: rgba(46,230,182,.8); transform: translateY(-2px)}
-    .fab .icon{ width:10px;height:10px;border-radius:99px;background: var(--accent2); box-shadow: 0 0 0 3px rgba(46,230,182,.22); }
-
     /* Modal: deep floating sheet */
     .modalBack{
       position:fixed; inset:0;
@@ -462,6 +440,7 @@
       letter-spacing:-.01em;
     }
     .modalActions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .btnrow{ display:flex; flex-wrap:wrap; gap:10px; }
     .btn.small{padding:10px 14px; border-radius: 14px; min-width:auto; font-weight:700; font-size:13px}
     pre{
       margin:14px 0 0;
@@ -596,9 +575,14 @@
             <div style="height:10px"></div>
 
             <div class="row">
-              <button class="btn small" id="resetSession" type="button">
-                Reset Session
-              </button>
+              <div class="btnrow">
+                <button class="btn small" id="resetSession" type="button">
+                  Reset Session
+                </button>
+                <button class="btn small" id="exportBtn" type="button">
+                  Export Session
+                </button>
+              </div>
               <div class="tiny">
                 Tip: swipe back and forth to navigate questions.
               </div>
@@ -653,12 +637,6 @@
       </div>
     </main>
 
-    <div class="exportFab">
-      <button class="fab" id="exportBtn" type="button" title="Export Session">
-        <span class="icon" aria-hidden="true"></span>
-        Export Session
-      </button>
-    </div>
 
     <nav class="bottomnav" aria-label="Navigation">
       <div class="navinner">
