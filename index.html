@@ -105,7 +105,17 @@
     .pill .dot{ width:8px;height:8px;border-radius:99px;background: var(--accent); box-shadow:0 0 0 3px rgba(139,123,255,.22); }
 
     .settings{ margin-top:12px; display:none; gap:12px; animation: fadeDown .35s var(--ease); }
-    .settings.open{display:grid}
+    .settings.open{
+      display:grid;
+      /* keep the whole panel reachable: scroll inside it, clear of the bottom nav */
+      max-height: calc(100vh - 150px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+      max-height: calc(100dvh - 150px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+      overflow-y:auto;
+      overscroll-behavior:contain;
+      -webkit-overflow-scrolling:touch;
+      padding-bottom:72px; /* room above the floating Export button */
+      scrollbar-width:thin;
+    }
     .grid{ display:grid; grid-template-columns: 1fr; gap:12px; }
     @media (min-width: 820px){ .grid{grid-template-columns: 1.2fr .8fr} }
     .panel{
